@@ -31,7 +31,7 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     prompt = f"""
     Given the following URL and HTTP headers, suggest the most likely file extensions for fuzzing this endpoint.
     Respond with a JSON object containing a list of extensions. The response will be parsed with json.loads(),
-    so it must be valid JSON. No preample or yapping. Use the format: {{"extensions": [".ext1", ".ext2", ...]}}.
+    so it must be valid JSON. No preamble or yapping. Use the format: {{"extensions": [".ext1", ".ext2", ...]}}.
     Do not suggest more than {max_extensions}.
 
     Examples:
