@@ -1,8 +1,20 @@
-# ffufai
+<div align="center">
 
-![image](https://github.com/user-attachments/assets/addf4d13-226c-496d-b620-6f6530141e22)
+<img src="https://github.com/user-attachments/assets/addf4d13-226c-496d-b620-6f6530141e22" alt="ffufai_logo" width="400" height="400">
+
+# `ffufai`
+
+![GitHub top language](https://img.shields.io/github/languages/top/jthack/ffufai)
+![GitHub last commit](https://img.shields.io/github/last-commit/jthack/ffufai)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
+<p class="align center">
 
 ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automatically suggests file extensions for fuzzing based on the target URL and its headers, using either OpenAI's GPT or Anthropic's Claude AI models.
+
+</p>
+
+</div>
 
 ## Features
 
