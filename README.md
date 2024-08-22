@@ -17,6 +17,7 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 </div>
 
 ## Features
+<img width="600  " alt="image" src="https://github.com/user-attachments/assets/0384d4f0-3a07-48d9-9805-ea1e76b6b693">
 
 - Seamlessly integrates with ffuf
 - Automatically suggests relevant file extensions for fuzzing
