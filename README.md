@@ -33,11 +33,11 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    chmod +x ffufai.py
    ```
 
-4. (Optional) To use ffufai from anywhere, add it to your PATH. You can do this by adding the following line to your `~/.bashrc` or `~/.zshrc` file:
+4. (Optional) To use ffufai from anywhere, you can create a symbolic link in a directory that's in your PATH. For example:
    ```
-   export PATH="/path/to/ffufai/directory:$PATH"
+   sudo ln -s /full/path/to/ffufai.py /usr/local/bin/ffufai
    ```
-   Replace "/path/to/ffufai/directory" with the actual path where you cloned the repository.
+   Replace "/full/path/to/ffufai.py" with the actual full path to where you cloned the repository.
 
 5. Set up your API key as an environment variable:
    For OpenAI:
@@ -53,24 +53,31 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 ## Usage
 
-Use ffufai just like you would use ffuf, but replace `ffuf` with `ffufai.py` (or just `ffufai` if you've added it to your PATH):
+Use ffufai just like you would use ffuf, but replace `ffuf` with `python3 ffufai.py` (or just `ffufai` if you've created the symbolic link):
 
 ```
-ffufai.py -u https://example.com/FUZZ -w /path/to/wordlist.txt
+python3 ffufai.py -u https://example.com/FUZZ -w /path/to/wordlist.txt
+```
+
+Or if you've created the symbolic link:
+
+```
+ffufai -u https://example.com/FUZZ -w /path/to/wordlist.txt
 ```
 
 ffufai will automatically suggest extensions based on the URL and add them to the ffuf command.
 
 ## Notes
 
-- ffufai requires the `FUZZ` keyword to be used and to be at the end of the URL path for accurate extension suggestion. It will warn you if this is not the case.
+- ffufai requires the FUZZ keyword to be at the end of the URL path for accurate extension suggestion. It will warn you if this is not the case.
 - All ffuf parameters are passed through to ffuf, so you can use any ffuf option with ffufai.
 - If both OpenAI and Anthropic API keys are set, ffufai will prefer the OpenAI key.
 
 ## Troubleshooting
 
-- If you encounter a "command not found" error, make sure ffufai.py is in your PATH or use the full path to the script.
+- If you encounter a "command not found" error, make sure you're using `python3 ffufai.py` or that you've correctly set up the symbolic link.
 - If you get an API key error, ensure you've correctly set up your OPENAI_API_KEY or ANTHROPIC_API_KEY environment variable.
+- If you see "import: command not found" errors, it means the script is being interpreted by the shell instead of Python. Make sure you're running it with `python3 ffufai.py` or that the shebang line at the top of the script is correct.
 
 ## Contributing
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import argparse
 import os
 import subprocess
@@ -30,7 +32,7 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     Given the following URL and HTTP headers, suggest the most likely file extensions for fuzzing this endpoint.
     Respond with a JSON object containing a list of extensions. The response will be parsed with json.loads(),
     so it must be valid JSON. No preample or yapping. Use the format: {{"extensions": [".ext1", ".ext2", ...]}}.
-    Do not suggest more than {max_extensions}. 
+    Do not suggest more than {max_extensions}.
 
     Examples:
     1. URL: https://example.com/presentations/FUZZ
