@@ -12,10 +12,10 @@ from urllib.parse import urlparse
 def get_api_key():
     openai_key = os.getenv('OPENAI_API_KEY')
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
-    if openai_key:
-        return ('openai', openai_key)
-    elif anthropic_key:
+    if anthropic_key:
         return ('anthropic', anthropic_key)
+    elif openai_key:
+        return ('openai', openai_key)
     else:
         raise ValueError("No API key found. Please set OPENAI_API_KEY or ANTHROPIC_API_KEY.")
 
