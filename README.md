@@ -100,12 +100,14 @@ ffufai accepts all the parameters that ffuf does, plus a few additional ones:
 
 All other ffuf parameters can be used as normal. For a full list of ffuf parameters, refer to the ffuf documentation.
 
-
 ## Notes
 
 - ffufai requires the FUZZ keyword to be at the end of the URL path for accurate extension suggestion. It will warn you if this is not the case.
 - All ffuf parameters are passed through to ffuf, so you can use any ffuf option with ffufai.
 - If both OpenAI and Anthropic API keys are set, ffufai will prefer the OpenAI key.
+
+HUGE Shoutout to zlz, aka Sam Curry, for the amazing idea to make this project. He suggested it and 2 hours later, here it is :)    
+<img width="744" alt="image" src="https://github.com/user-attachments/assets/9f914cc4-fe5f-4dbc-b7d9-548473ea2134">
 
 ## Troubleshooting
 
