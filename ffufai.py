@@ -32,7 +32,10 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     Given the following URL and HTTP headers, suggest the most likely file extensions for fuzzing this endpoint.
     Respond with a JSON object containing a list of extensions. The response will be parsed with json.loads(),
     so it must be valid JSON. No preamble or yapping. Use the format: {{"extensions": [".ext1", ".ext2", ...]}}.
-    Do not suggest more than {max_extensions}.
+    Do not suggest more than {max_extensions}, but only suggest extensions that make sense. For example, if the path is 
+    /js/ then don't suggest .css as the extension. Also, if limited, prefer the extensions which are more interesting.
+    The URL path is great to look at for ideas. For example, if it says presentations, then it's likely there 
+    are powerpoints or pdfs in there. If the path is /js/ then it's good to use js as an extension.
 
     Examples:
     1. URL: https://example.com/presentations/FUZZ
