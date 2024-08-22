@@ -1,5 +1,7 @@
 # ffufai
 
+![image](https://github.com/user-attachments/assets/addf4d13-226c-496d-b620-6f6530141e22)
+
 ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automatically suggests file extensions for fuzzing based on the target URL and its headers, using either OpenAI's GPT or Anthropic's Claude AI models.
 
 ## Features
