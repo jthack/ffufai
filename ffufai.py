@@ -55,7 +55,7 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     if api_type == 'openai':
         client = OpenAI(api_key=api_key)
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant that suggests file extensions for fuzzing based on URL and headers."},
                 {"role": "user", "content": prompt}
@@ -65,7 +65,7 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     elif api_type == 'anthropic':
         client = anthropic.Anthropic(api_key=api_key)
         message = client.messages.create(
-            model="claude-3-sonnet-20240229",
+            model="claude-3-5-sonnet-20240620",
             max_tokens=1000,
             temperature=0,
             system="You are a helpful assistant that suggests file extensions for fuzzing based on URL and headers.",
