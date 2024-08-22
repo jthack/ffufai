@@ -86,16 +86,16 @@ ffufai will automatically suggest extensions based on the URL and add them to th
 
 ffufai accepts all the parameters that ffuf does, plus a few additional ones:
 
-- `--ffuf-path`: Specifies the path to the ffuf executable. Default is 'ffuf'.
+- `--ffuf-path`: Specifies the path to the ffuf executable. Default is 'ffuf'.  
   Example: `ffufai --ffuf-path /usr/local/bin/ffuf -u https://example.com/FUZZ -w wordlist.txt`
 
-- `--max-extensions`: Sets the maximum number of extensions to suggest. Default is 4.
+- `--max-extensions`: Sets the maximum number of extensions to suggest. Default is 4.  
   Example: `ffufai --max-extensions 6 -u https://example.com/FUZZ -w wordlist.txt`
 
-- `-u`: Specifies the target URL. This parameter is required and should include the FUZZ keyword.
+- `-u`: Specifies the target URL. This parameter is required and should include the FUZZ keyword.  
   Example: `ffufai -u https://example.com/FUZZ -w wordlist.txt`
 
-- `-w`: Specifies the wordlist to use for fuzzing. This is a standard ffuf parameter.
+- `-w`: Specifies the wordlist to use for fuzzing. This is a standard ffuf parameter.  
   Example: `ffufai -u https://example.com/FUZZ -w /path/to/wordlist.txt`
 
 All other ffuf parameters can be used as normal. For a full list of ffuf parameters, refer to the ffuf documentation.
