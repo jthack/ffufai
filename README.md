@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://github.com/user-attachments/assets/addf4d13-226c-496d-b620-6f6530141e22" alt="ffufai_logo" width="400" height="400">
+<img src="https://github.com/user-attachments/assets/1f9ce2d7-8f9d-4746-bad4-acfccad74900" alt="ffufai_logo" width="400">
 
 # `ffufai`
 
