@@ -60,7 +60,7 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/ffufai.git
+   git clone https://github.com/jthack/ffufai
    cd ffufai
    ```
 
