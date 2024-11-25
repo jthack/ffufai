@@ -9,15 +9,19 @@ from openai import OpenAI
 import anthropic
 from urllib.parse import urlparse
 
+
 def get_api_key():
+    ollama_key = os.getenv('OLLAMA_API_KEY')
     openai_key = os.getenv('OPENAI_API_KEY')
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
-    if anthropic_key:
+    if ollama_key:
+        return ('ollama', ollama_key)
+    elif anthropic_key:
         return ('anthropic', anthropic_key)
     elif openai_key:
         return ('openai', openai_key)
     else:
-        raise ValueError("No API key found. Please set OPENAI_API_KEY or ANTHROPIC_API_KEY.")
+        raise ValueError("No API key found. Please set OLLAMA_API_KEY or OPENAI_API_KEY or ANTHROPIC_API_KEY.")
 
 def get_headers(url):
     try:
@@ -52,7 +56,20 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     JSON Response:
     """
 
-    if api_type == 'openai':
+    if api_type == 'ollama':
+        client = OpenAI(
+            base_url = 'http://127.0.0.1:11434/v1', #set to IP address to network server if applicable
+            api_key=api_key, # required, but unused
+        )
+        response = client.chat.completions.create(
+            model="llama3.1", #set local model details
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that suggests file extensions for fuzzing based on URL and headers."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return json.loads(response.choices[0].message.content.strip())
+    elif api_type == 'openai':
         client = OpenAI(api_key=api_key)
         response = client.chat.completions.create(
             model="gpt-4o",
