@@ -9,7 +9,10 @@ from openai import OpenAI
 import anthropic
 from urllib.parse import urlparse
 
-def get_api_key():
+def get_llm_provider():
+    if os.getenv('OLLAMA_MODEL'):
+        return ('ollama', os.getenv('OLLAMA_MODEL'))
+    
     openai_key = os.getenv('OPENAI_API_KEY')
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
     if anthropic_key:
@@ -17,7 +20,7 @@ def get_api_key():
     elif openai_key:
         return ('openai', openai_key)
     else:
-        raise ValueError("No API key found. Please set OPENAI_API_KEY or ANTHROPIC_API_KEY.")
+        raise ValueError("No API key or Ollama model found. Please set OLLAMA_MODEL, OPENAI_API_KEY, or ANTHROPIC_API_KEY.")
 
 def get_headers(url):
     try:
@@ -27,7 +30,7 @@ def get_headers(url):
         print(f"Error fetching headers: {e}")
         return {"Header": "Error fetching headers."}
 
-def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
+def get_ai_extensions(url, headers, provider, model_or_key, max_extensions):
     prompt = f"""
     Given the following URL and HTTP headers, suggest the most likely file extensions for fuzzing this endpoint.
     Respond with a JSON object containing a list of extensions. The response will be parsed with json.loads(),
@@ -52,8 +55,8 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     JSON Response:
     """
 
-    if api_type == 'openai':
-        client = OpenAI(api_key=api_key)
+    if provider == 'openai':
+        client = OpenAI(api_key=model_or_key)
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
@@ -62,8 +65,8 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
             ]
         )
         return json.loads(response.choices[0].message.content.strip())
-    elif api_type == 'anthropic':
-        client = anthropic.Anthropic(api_key=api_key)
+    elif provider == 'anthropic':
+        client = anthropic.Anthropic(api_key=model_or_key)
         message = client.messages.create(
             model="claude-3-5-sonnet-20240620",
             max_tokens=1000,
@@ -74,6 +77,23 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
             ]
         )
         return json.loads(message.content[0].text)
+    elif provider == 'ollama':
+        try:
+            response = requests.post(
+                "http://localhost:11434/api/generate",
+                json={
+                    "model": model_or_key,
+                    "prompt": prompt,
+                    "stream": False,
+                    "format": "json"
+                }
+            )
+            response.raise_for_status()
+            # The output from ollama is a json object, with a response key which is a string of json.
+            return json.loads(json.loads(response.text)['response'])
+        except requests.RequestException as e:
+            print(f"Error communicating with Ollama: {e}")
+            return None
 
 def main():
     parser = argparse.ArgumentParser(description='ffufai - AI-powered ffuf wrapper')
@@ -98,9 +118,12 @@ def main():
     base_url = url.replace('FUZZ', '')
     headers = get_headers(base_url)
 
-    api_type, api_key = get_api_key()
+    provider, model_or_key = get_llm_provider()
     try:
-        extensions_data = get_ai_extensions(url, headers, api_type, api_key, args.max_extensions)
+        extensions_data = get_ai_extensions(url, headers, provider, model_or_key, args.max_extensions)
+        if extensions_data is None:
+            return
+        
         print(extensions_data)
         extensions = ','.join(extensions_data['extensions'][:args.max_extensions])
     except (json.JSONDecodeError, KeyError) as e:
