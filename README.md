@@ -10,7 +10,7 @@
 
 <p class="align center">
 
-ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automatically suggests file extensions for fuzzing based on the target URL and its headers, using either OpenAI's GPT or Anthropic's Claude AI models.
+ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automatically suggests file extensions for fuzzing based on the target URL and its headers, using either OpenAI's GPT, Anthropic's Claude, or a local Ollama model.
 
 </p>
 
@@ -21,14 +21,14 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 - Seamlessly integrates with ffuf
 - Automatically suggests relevant file extensions for fuzzing
-- Supports both OpenAI and Anthropic AI models
+- Supports OpenAI, Anthropic, and local Ollama AI models
 - Passes through all ffuf parameters
 
 ## Prerequisites
 
 - Python 3.6+
 - ffuf (installed and accessible in your PATH)
-- An OpenAI API key or Anthropic API key
+- An OpenAI API key, Anthropic API key, or a running Ollama instance.
 
 ## Installation
 
@@ -54,7 +54,11 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    ```
    Replace "/full/path/to/ffufai.py" with the actual full path to where you cloned the repository.
 
-5. Set up your API key as an environment variable:
+5. Set up your LLM provider as an environment variable:
+   For Ollama (recommended):
+   ```
+   export OLLAMA_MODEL='your-model-name' # e.g., 'llama3'
+   ```
    For OpenAI:
    ```
    export OPENAI_API_KEY='your-api-key-here'
@@ -104,7 +108,7 @@ All other ffuf parameters can be used as normal. For a full list of ffuf paramet
 
 - ffufai requires the FUZZ keyword to be at the end of the URL path for accurate extension suggestion. It will warn you if this is not the case.
 - All ffuf parameters are passed through to ffuf, so you can use any ffuf option with ffufai.
-- If both OpenAI and Anthropic API keys are set, ffufai will prefer the OpenAI key.
+- ffufai will prioritize LLM providers in the following order: Ollama, Anthropic, OpenAI. If `OLLAMA_MODEL` is set, it will be used. If not, it will check for `ANTHROPIC_API_KEY`, and finally `OPENAI_API_KEY`.
 
 HUGE Shoutout to zlz, aka Sam Curry, for the amazing idea to make this project. He suggested it and 2 hours later, here it is :)    
 <img width="744" alt="image" src="https://github.com/user-attachments/assets/9f914cc4-fe5f-4dbc-b7d9-548473ea2134">
@@ -112,7 +116,7 @@ HUGE Shoutout to zlz, aka Sam Curry, for the amazing idea to make this project. 
 ## Troubleshooting
 
 - If you encounter a "command not found" error, make sure you're using `python3 ffufai.py` or that you've correctly set up the symbolic link.
-- If you get an API key error, ensure you've correctly set up your OPENAI_API_KEY or ANTHROPIC_API_KEY environment variable.
+- If you get an API key error, ensure you've correctly set up your `OLLAMA_MODEL`, `OPENAI_API_KEY`, or `ANTHROPIC_API_KEY` environment variable.
 - If you see "import: command not found" errors, it means the script is being interpreted by the shell instead of Python. Make sure you're running it with `python3 ffufai.py` or that the shebang line at the top of the script is correct.
 
 ## Contributing
