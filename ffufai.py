@@ -5,20 +5,23 @@ import os
 import subprocess
 import requests
 import json
-import re
 from openai import OpenAI
 import anthropic
 from urllib.parse import urlparse
+import time
 
 def get_api_key():
     openai_key = os.getenv('OPENAI_API_KEY')
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+    hf_key = os.getenv('HUGGINGFACE_API_KEY')
     if anthropic_key:
         return ('anthropic', anthropic_key)
     elif openai_key:
         return ('openai', openai_key)
+    elif hf_key:
+        return ('huggingface', hf_key)
     else:
-        raise ValueError("No API key found. Please set OPENAI_API_KEY or ANTHROPIC_API_KEY.")
+        raise ValueError("No API key found. Please set OPENAI_API_KEY, ANTHROPIC_API_KEY, or HUGGINGFACE_API_KEY.")
 
 def get_headers(url):
     try:
@@ -33,19 +36,7 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
 Given the following URL and HTTP headers, suggest the most likely file extensions for fuzzing this endpoint.
 Respond with a JSON object containing a list of extensions. The response will be parsed with json.loads(),
 so it must be valid JSON. No preamble or yapping. Use the format: {{"extensions": [".ext1", ".ext2", ...]}}.
-Do not suggest more than {max_extensions}, but only suggest extensions that make sense. For example, if the path is 
-/js/ then don't suggest .css as the extension. Also, if limited, prefer the extensions which are more interesting.
-The URL path is great to look at for ideas. For example, if it says presentations, then it's likely there 
-are powerpoints or pdfs in there. If the path is /js/ then it's good to use js as an extension.
-
-Examples:
-1. URL: https://example.com/presentations/FUZZ
-   Headers: {{"Content-Type": "application/pdf", "Content-Length": "1234567"}}
-   JSON Response: {{"extensions": [".pdf", ".ppt", ".pptx"]}}
-
-2. URL: https://example.com/FUZZ
-   Headers: {{"Server": "Microsoft-IIS/10.0", "X-Powered-By": "ASP.NET"}}
-   JSON Response: {{"extensions": [".aspx", ".asp", ".exe", ".dll"]}}
+Do not suggest more than {max_extensions}, but only suggest extensions that make sense.
 
 URL: {url}
 Headers: {headers}
@@ -65,13 +56,6 @@ JSON Response:
         raw_content = response.choices[0].message.content.strip()
         print("AI Raw Content:", raw_content)
 
-        # Remove Markdown code block if present
-        if raw_content.startswith("```"):
-            raw_content = re.sub(r"^```(?:json)?\n", "", raw_content)
-            raw_content = re.sub(r"\n```$", "", raw_content)
-
-        return json.loads(raw_content)
-
     elif api_type == 'anthropic':
         client = anthropic.Anthropic(api_key=api_key)
         message = client.messages.create(
@@ -86,11 +70,51 @@ JSON Response:
         raw_content = message.content[0].text.strip()
         print("AI Raw Content:", raw_content)
 
-        if raw_content.startswith("```"):
-            raw_content = re.sub(r"^```(?:json)?\n", "", raw_content)
-            raw_content = re.sub(r"\n```$", "", raw_content)
+    elif api_type == 'huggingface':
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+        import torch
 
+        print("🧠 Loading Qwen model locally...")
+
+        model_name = "Qwen/Qwen2.5-1.5B-Instruct"
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+            device_map="auto"
+        )
+
+        # Create chat-style prompt
+        messages = [
+            {"role": "system", "content": "You are a helpful assistant that suggests file extensions for fuzzing based on URL and headers."},
+            {"role": "user", "content": prompt}
+        ]
+
+        text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+
+        generated_ids = model.generate(
+            **model_inputs,
+            max_new_tokens=512,
+            do_sample=False,
+            temperature=0.5
+        )
+
+        generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+        ]
+
+        raw_content = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        print("AI Raw Content:", raw_content)
+
+    else:
+        raise ValueError("Unsupported API type")
+
+    try:
         return json.loads(raw_content)
+    except json.JSONDecodeError:
+        print("❌ Failed to parse AI output. Response:", raw_content)
+        raise
 
 def main():
     parser = argparse.ArgumentParser(description='ffufai - AI-powered ffuf wrapper')
@@ -110,7 +134,7 @@ def main():
     path_parts = parsed_url.path.split('/')
 
     if 'FUZZ' not in path_parts[-1]:
-        print("Warning: FUZZ keyword is not at the end of the URL path. Extension fuzzing may not work as expected.")
+        print("⚠️ Warning: FUZZ keyword is not at the end of the URL path. Extension fuzzing may not work as expected.")
 
     base_url = url.replace('FUZZ', '')
     headers = get_headers(base_url)
@@ -119,14 +143,19 @@ def main():
     try:
         extensions_data = get_ai_extensions(url, headers, api_type, api_key, args.max_extensions)
         print("Extensions JSON:", extensions_data)
+
+        if not extensions_data.get('extensions'):
+            print("⚠️ No extensions returned by AI. Using fallback list.")
+            extensions_data = {"extensions": [".php", ".html", ".txt", ".bak"]}
+
         extensions = ','.join(extensions_data['extensions'][:args.max_extensions])
+
     except (json.JSONDecodeError, KeyError) as e:
         print(f"❌ Error parsing AI response. Try again. Error: {e}")
         return
 
     ffuf_command = [args.ffuf_path] + unknown + ['-e', extensions]
 
-    # Check if ffuf binary exists
     if not os.path.isfile(args.ffuf_path):
         print(f"❌ Error: ffuf binary not found at {args.ffuf_path}")
         return
