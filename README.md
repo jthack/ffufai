@@ -20,7 +20,7 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 - Seamlessly integrates with ffuf
 - Automatically suggests relevant file extensions for fuzzing
-- Supports both OpenAI and Anthropic AI models
+- Supports both OpenAI, Anthropic AI models and Free Hugging Face AI models 
 - Passes through all ffuf parameters
 
 ## Prerequisites
