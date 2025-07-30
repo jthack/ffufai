@@ -32,23 +32,23 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 ## Installation
 
-1. Clone this repository:
+1. Clone this repository :
    ```
    git clone https://github.com/jthack/ffufai
    cd ffufai
    ```
 
-2. Install the required Python packages:
+2. Install the required Python packages :
    ```
    pip install requests openai anthropic
    ```
 
-3. Make the script executable:
+3. Make the script executable :
    ```
    chmod +x ffufai.py
    ```
 
-4. (Optional) To use ffufai from anywhere, you can create a symbolic link in a directory that's in your PATH. For example:
+4. (Optional) To use ffufai from anywhere, you can create a symbolic link in a directory that's in your PATH. For example :
    ```
    sudo ln -s /full/path/to/ffufai.py /usr/local/bin/ffufai
    ```
@@ -56,15 +56,15 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 5. Set up your API key as an environment variable :
 
-   For OpenAI:
+   For OpenAI :
    ```
    export OPENAI_API_KEY='your-api-key-here'
    ```
-   Or for Anthropic:
+   Or for Anthropic :
    ```
    export ANTHROPIC_API_KEY='your-api-key-here'
    ```
-   or Hugging Face
+   or Hugging Face :
    ```
    export HUGGINGFACE_API_KEY=your-api-key-here        ## no '' 
    ```
@@ -73,13 +73,13 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 ## Usage
 
-Use ffufai just like you would use ffuf, but replace `ffuf` with `python3 ffufai.py` (or just `ffufai` if you've created the symbolic link):
+Use ffufai just like you would use ffuf, but replace `ffuf` with `python3 ffufai.py` (or just `ffufai` if you've created the symbolic link) :
 
 ```
 python3 ffufai.py -u https://example.com/FUZZ -w /path/to/wordlist.txt
 ```
 
-Or if you've created the symbolic link:
+Or if you've created the symbolic link :
 
 ```
 ffufai -u https://example.com/FUZZ -w /path/to/wordlist.txt
