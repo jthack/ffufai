@@ -148,7 +148,11 @@ def main():
             print("⚠️ No extensions returned by AI. Using fallback list.")
             extensions_data = {"extensions": [".php", ".html", ".txt", ".bak"]}
 
-        extensions = ','.join(extensions_data['extensions'][:args.max_extensions])
+        # extensions = ','.join(extensions_data['extensions'][:args.max_extensions])
+
+        extensions_list = extensions_data['extensions'][:args.max_extensions]
+        # Ensure all entries start with a dot
+        extensions = ','.join(ext if ext.startswith('.') else f'.{ext}' for ext in extensions_list)
 
     except (json.JSONDecodeError, KeyError) as e:
         print(f"❌ Error parsing AI response. Try again. Error: {e}")
