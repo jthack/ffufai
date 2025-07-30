@@ -5,10 +5,11 @@ import os
 import subprocess
 import requests
 import json
+import shutil
 from openai import OpenAI
 import anthropic
 from urllib.parse import urlparse
-import time
+import re
 
 def get_api_key():
     openai_key = os.getenv('OPENAI_API_KEY')
@@ -74,7 +75,7 @@ JSON Response:
         from transformers import AutoModelForCausalLM, AutoTokenizer
         import torch
 
-        print(" ﾒ૦ﾒ૦ 💋💋💋 Loading Qwen model locally...")
+        print(" ﾒ૦ﾒ૦ 💋💋💋 ﾒ૦ﾒ૦ Loading Qwen model locally...")
 
         model_name = "Qwen/Qwen2.5-1.5B-Instruct"
         tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -84,7 +85,6 @@ JSON Response:
             device_map="auto"
         )
 
-        # Create chat-style prompt
         messages = [
             {"role": "system", "content": "You are a helpful assistant that suggests file extensions for fuzzing based on URL and headers."},
             {"role": "user", "content": prompt}
@@ -116,13 +116,36 @@ JSON Response:
         print("❌ Failed to parse AI output. Response:", raw_content)
         raise
 
+def colorize_ffuf_output(line):
+    line = line.decode(errors='ignore').strip()
+    status_match = re.search(r'\[Status: (\d{3})', line)
+    if status_match:
+        status_code = int(status_match.group(1))
+        if status_code == 200:
+            color = '\033[92m'  # Green
+        elif status_code == 301:
+            color = '\033[94m'  # Blue
+        elif status_code == 403:
+            color = '\033[91m'  # Red
+        else:
+            color = '\033[0m'   # Default
+        reset = '\033[0m'
+        print(f"{color}{line}{reset}")
+    else:
+        # Optionally parse ffuf's built-in progress:
+        progress_match = re.search(r'Progress: \[(\d+)/(\d+)\]', line)
+        if progress_match:
+            current, total = progress_match.groups()
+            print(f"\033[93m🔄 Progress: {current}/{total} requests\033[0m")
+        else:
+            print(line)
+
 def main():
     parser = argparse.ArgumentParser(description='ffufai - AI-powered ffuf wrapper')
     parser.add_argument('--ffuf-path', default='ffuf', help='Path to ffuf executable')
     parser.add_argument('--max-extensions', type=int, default=5, help='Maximum number of extensions to suggest')
     args, unknown = parser.parse_known_args()
 
-    # Find the -u argument in the unknown args
     try:
         url_index = unknown.index('-u') + 1
         url = unknown[url_index]
@@ -148,10 +171,7 @@ def main():
             print("⚠️ No extensions returned by AI. Using fallback list.")
             extensions_data = {"extensions": [".php", ".html", ".txt", ".bak"]}
 
-        # extensions = ','.join(extensions_data['extensions'][:args.max_extensions])
-
         extensions_list = extensions_data['extensions'][:args.max_extensions]
-        # Ensure all entries start with a dot
         extensions = ','.join(ext if ext.startswith('.') else f'.{ext}' for ext in extensions_list)
 
     except (json.JSONDecodeError, KeyError) as e:
@@ -160,17 +180,17 @@ def main():
 
     ffuf_command = [args.ffuf_path] + unknown + ['-e', extensions]
 
-    if not os.path.isfile(args.ffuf_path):
+    if not os.path.isfile(args.ffuf_path) and not shutil.which(args.ffuf_path):
         print(f"❌ Error: ffuf binary not found at {args.ffuf_path}")
         return
 
     try:
         print(f"▶️ Running: {' '.join(ffuf_command)}")
-        subprocess.run(ffuf_command)
+        with subprocess.Popen(ffuf_command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
+            for line in proc.stdout:
+                colorize_ffuf_output(line)
     except Exception as e:
         print(f"❌ Error running ffuf: {e}")
 
 if __name__ == '__main__':
     main()
-
-# 30/07/2025
