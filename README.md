@@ -106,14 +106,6 @@ All other ffuf parameters can be used as normal. For a full list of ffuf paramet
 - All ffuf parameters are passed through to ffuf, so you can use any ffuf option with ffufai.
 - If both OpenAI and Anthropic API keys are set, ffufai will prefer the OpenAI key.
 
-HUGE Shoutout to zlz, aka Sam Curry, for the amazing idea to make this project. He suggested it and 2 hours later, here it is :)    
-<img width="744" alt="image" src="https://github.com/user-attachments/assets/9f914cc4-fe5f-4dbc-b7d9-548473ea2134">
-
-## Troubleshooting
-
-- If you encounter a "command not found" error, make sure you're using `python3 ffufai.py` or that you've correctly set up the symbolic link.
-- If you get an API key error, ensure you've correctly set up your OPENAI_API_KEY or ANTHROPIC_API_KEY environment variable.
-- If you see "import: command not found" errors, it means the script is being interpreted by the shell instead of Python. Make sure you're running it with `python3 ffufai.py` or that the shebang line at the top of the script is correct.
 
 ## Contributing
 
