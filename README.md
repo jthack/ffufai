@@ -5,7 +5,6 @@
 # `ffufai`
 
 ![GitHub top language](https://img.shields.io/github/languages/top/jthack/ffufai)
-![GitHub last commit](https://img.shields.io/github/last-commit/jthack/ffufai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 <p class="align center">
