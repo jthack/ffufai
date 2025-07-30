@@ -42,18 +42,13 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    pip install requests openai anthropic
    ```
 
-3. Make the script executable :
-   ```
-   chmod +x ffufai.py
-   ```
-
-4. To load and run `Qwen/Qwen2.5-1.5B-Instruct` model locally via Hugging Face :
+3. To load and run `Qwen/Qwen2.5-1.5B-Instruct` model locally via Hugging Face :
 	```
 	pip install transformers torch
 	```
 - Above command will download model, models are cached in `~/.cache/huggingface`. 
 
-5. To use ffufai globally from terminal, you can create a symbolic link in a directory that's in your PATH. For example :
+4. To use ffufai globally from terminal, you can create a symbolic link in a directory that's in your PATH. For example :
    ```
    sudo ln -s /full/path/to/ffufai.py /usr/local/bin/ffufai
    ```
