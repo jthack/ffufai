@@ -47,19 +47,25 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    chmod +x ffufai.py
    ```
 
-4. (Optional) To use ffufai from anywhere, you can create a symbolic link in a directory that's in your PATH. For example :
+4. To load and run `Qwen/Qwen2.5-1.5B-Instruct` model locally via Hugging Face :
+	```
+	pip install transformers torch
+	```
+- Above command will download model, models are cached in `~/.cache/huggingface`. 
+
+5. To use ffufai globally from terminal, you can create a symbolic link in a directory that's in your PATH. For example :
    ```
    sudo ln -s /full/path/to/ffufai.py /usr/local/bin/ffufai
    ```
    Replace "/full/path/to/ffufai.py" with the actual full path to where you cloned the repository.
 
-5. Set up your API key as an environment variable :
+6. Set up your API key as an environment variable :
 
    For OpenAI :
    ```
    export OPENAI_API_KEY='your-api-key-here'
    ```
-   Or for Anthropic :
+   or Anthropic :
    ```
    export ANTHROPIC_API_KEY='your-api-key-here'
    ```
@@ -68,7 +74,7 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    export HUGGINGFACE_API_KEY=your-api-key-here        ## no '' 
    ```
    
-   You can add these lines to your `~/.bashrc` or `~/.zshrc` file to make them permanent.
+   You can add these lines to your `~/.bashrc` or `~/.zshrc` file to make them permanent and reload your `~/.bashrc` or `~/.zshrc`
 
 ## Usage
 
@@ -85,6 +91,7 @@ ffufai -u https://example.com/FUZZ -w /path/to/wordlist.txt
 ```
 
 ffufai will automatically suggest extensions based on the URL and add them to the ffuf command.
+
 
 ## Parameters
 
@@ -108,7 +115,7 @@ All other ffuf parameters can be used as normal. For a full list of ffuf paramet
 
 - ffufai requires the FUZZ keyword to be at the end of the URL path for accurate extension suggestion. It will warn you if this is not the case.
 - All ffuf parameters are passed through to ffuf, so you can use any ffuf option with ffufai.
-- If both OpenAI and Anthropic API keys are set, ffufai will prefer the OpenAI key.
+
 
 
 ## Contributing
