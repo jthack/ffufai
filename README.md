@@ -63,7 +63,11 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    ```
    export ANTHROPIC_API_KEY='your-api-key-here'
    ```
-
+   or Hugging Face
+   ```
+   export HUGGINGFACE_API_KEY=your-api-key-here        ## no '' 
+   ```
+   
    You can add these lines to your `~/.bashrc` or `~/.zshrc` file to make them permanent.
 
 ## Usage
