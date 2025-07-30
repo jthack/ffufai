@@ -119,7 +119,7 @@ JSON Response:
 def main():
     parser = argparse.ArgumentParser(description='ffufai - AI-powered ffuf wrapper')
     parser.add_argument('--ffuf-path', default='ffuf', help='Path to ffuf executable')
-    parser.add_argument('--max-extensions', type=int, default=4, help='Maximum number of extensions to suggest')
+    parser.add_argument('--max-extensions', type=int, default=5, help='Maximum number of extensions to suggest')
     args, unknown = parser.parse_known_args()
 
     # Find the -u argument in the unknown args
