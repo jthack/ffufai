@@ -54,7 +54,8 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    ```
    Replace "/full/path/to/ffufai.py" with the actual full path to where you cloned the repository.
 
-5. Set up your API key as an environment variable:
+5. Set up your API key as an environment variable :
+
    For OpenAI:
    ```
    export OPENAI_API_KEY='your-api-key-here'
