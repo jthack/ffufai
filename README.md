@@ -27,7 +27,7 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 - Python 3.6+
 - ffuf (installed and accessible in your PATH)
-- An OpenAI API key or Anthropic API key or Hugging Face API key 
+- An OpenAI API key or Anthropic API key or Free Hugging Face API key 
 
 ## Installation
 
