@@ -33,7 +33,7 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 1. Clone this repository :
    ```
-   git clone [https://github.com/jthack/ffufai](https://github.com/ikajakam/ffufai.git)
+   git clone https://github.com/ikajakam/ffufai.git
    cd ffufai
    ```
 
