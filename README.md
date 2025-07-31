@@ -1,7 +1,3 @@
-sudo apt install python3-poetry
-
-pip install accelerate
-
 <div align="center">
 
 <img src="https://github.com/user-attachments/assets/1f9ce2d7-8f9d-4746-bad4-acfccad74900" alt="ffufai_logo" width="400">
