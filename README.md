@@ -1,3 +1,7 @@
+sudo apt install python3-poetry
+
+pip install accelerate
+
 <div align="center">
 
 <img src="https://github.com/user-attachments/assets/1f9ce2d7-8f9d-4746-bad4-acfccad74900" alt="ffufai_logo" width="400">
@@ -44,7 +48,10 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 3. To load and run `Qwen/Qwen2.5-1.5B-Instruct` model locally via Hugging Face :
 	```
-	pip install transformers torch
+	pip install transformers torch accelerate
+	```
+	```
+	poetry add accelerate
 	```
 - Above command will download model, models are cached in `~/.cache/huggingface`. 
 
@@ -120,3 +127,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
