@@ -49,7 +49,7 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 	```
 	poetry add accelerate
 	```
-- Above command will download model, models are cached in `~/.cache/huggingface`. 
+- Models are cached in `~/.cache/huggingface`
 
 4. To use ffufai globally from terminal, you can create a symbolic link in a directory that's in your PATH. For example :
    ```
