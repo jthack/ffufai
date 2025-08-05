@@ -51,7 +51,7 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 	```
 - Models are cached in `~/.cache/huggingface`
 
-4. To use ffufai globally from terminal, you can create a symbolic link in a directory that's in your PATH. For example :
+4. To use ffufai globally from terminal, create a symbolic link in a directory that's in your PATH.
    ```
    sudo ln -s /full/path/to/ffufai.py /usr/local/bin/ffufai
    ```
