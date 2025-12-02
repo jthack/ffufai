@@ -220,7 +220,7 @@ def main():
             sub_file.write(subdomains)
             sub_file.close()
 
-            subdomain_url = f'{parsed_url.scheme}://FUZZ.{root_domain}{parsed_url.path}'
+            subdomain_url = f'{parsed_url.scheme}://FUZZ.{root_domain}'
             ffuf_command = [args.ffuf_path] + unknown +  ['-u', subdomain_url, '-w', sub_file.name]
             subprocess.run(ffuf_command)
 
