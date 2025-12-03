@@ -75,11 +75,13 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
                 {"role": "user", "content": prompt}
             ]
         )
+
+
         return json.loads(message.content[0].text)
 
 def get_contextual_wordlist(url, headers, api_type, api_key):
     prompt = f"""
-    Given the following URL and HTTP headers, suggest the most likely contextual wordlist for fuzzing this endpoint.
+    Given the following URL and HTTP headers, suggest the most likely contextual wordlist for fuzzing this endpoint. You can be extensive.
     Respond with a JSON object containing a list of subdomais, directories and files. The response will be parsed with json.loads(),
     so it must be valid JSON. No preamble or yapping. Use the format: { {"subdomains": ["example1", "example2", ...]}, {"files" : ["file1", "file2"]} }.
     Only suggest subdomains that make sense. For example, if domain is for a book shop
@@ -144,7 +146,7 @@ def get_contextual_wordlist(url, headers, api_type, api_key):
     elif api_type == 'anthropic':
         client = anthropic.Anthropic(api_key=api_key)
         message = client.messages.create(
-            model="claude-3-5-sonnet-20240620",
+            model="claude-sonnet-4-20250514",
             max_tokens=1000,
             temperature=0,
             system="You are a helpful assistant that suggests wordlists for fuzzing based on URL and headers.",
@@ -197,6 +199,7 @@ def main():
         subprocess.run(ffuf_command)
 
     if args.wordlists:
+        print("wordlists")
         try:
             wordlists_data = get_contextual_wordlist(url, headers, api_type, api_key)
             print(wordlists_data)
