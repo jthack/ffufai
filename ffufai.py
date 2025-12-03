@@ -10,6 +10,7 @@ import anthropic
 from urllib.parse import urlparse
 import tempfile
 import os
+from bs4 import BeautifulSoup
 
 def get_api_key():
     openai_key = os.getenv('OPENAI_API_KEY')
@@ -20,6 +21,38 @@ def get_api_key():
         return ('openai', openai_key)
     else:
         raise ValueError("No API key found. Please set OPENAI_API_KEY or ANTHROPIC_API_KEY.")
+
+
+def get_response(url):
+    try:
+        response = requests.get(url, allow_redirects=True)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        for tag in soup.select('style, link[rel="stylesheet"]'):
+            tag.decompose()
+
+        for tag in soup.find_all(True):
+            if hasattr(tag, 'attrs') and tag.attrs is not None:
+                tag.attrs.pop('style', None)
+
+            if tag.name == 'svg':
+                tag.decompose()
+            if tag.name == 'img':
+                tag.decompose()
+
+        content = soup.prettify()
+
+        return {
+            "url": response.url,
+            "headers": dict(response.headers),
+            "cookies": dict(response.cookies),
+            "content": content[:2500]
+        }
+
+    except requests.RequestException as e:
+        print(f"Error fetching content: {e}")
+        return {"error": "Error fetching content."}
 
 def get_headers(url):
     try:
@@ -79,7 +112,7 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
 
         return json.loads(message.content[0].text)
 
-def get_contextual_wordlist(url, headers, api_type, api_key, max_size):
+def get_contextual_wordlist(url, headers, api_type, api_key, max_size, cookies=None, content=None):
     prompt = f"""
     Given the following URL and HTTP headers, suggest the most likely contextual wordlist for content discovery on this endpoint.
     Be as extensive as possible, provide the maximum number of directories and files that make sense for the endpoint.
@@ -124,6 +157,8 @@ def get_contextual_wordlist(url, headers, api_type, api_key, max_size):
 
     URL: {url}
     Headers: {headers}
+    Cookies: {cookies}
+    Content: {content}
 
     JSON Response:
     """
@@ -159,6 +194,7 @@ def main():
     parser.add_argument('--max-extensions', type=int, default=4, help='Maximum number of extensions to suggest')
     parser.add_argument('--wordlists', action='store_true', help='Generate contextual wordlists')
     parser.add_argument('--max-wordlist-size', type=int, help="The maximum size of the generated wordlist")
+    parser.add_argument('--include-response', action='store_true', help='Makes a GET request and uses the Response as context for better wordlist generation (Uses More tokens)')
     args, unknown = parser.parse_known_args()
 
     # Find the -u argument in the unknown args
@@ -171,11 +207,11 @@ def main():
 
     parsed_url = urlparse(url)
     path_parts = parsed_url.path.split('/')
+    base_url = url.replace('FUZZ', '')
 
     if 'FUZZ' not in path_parts[-1]:
         print("Warning: FUZZ keyword is not at the end of the URL path. Extension fuzzing may not work as expected.")
 
-    base_url = url.replace('FUZZ', '')
     headers = get_headers(base_url)
 
     api_type, api_key = get_api_key()
@@ -188,12 +224,21 @@ def main():
             else:
                 size = 200
 
-            wordlists_data = get_contextual_wordlist(url, headers, api_type, api_key, size)
+            if args.include_response:
+                response = get_response(base_url)
+                headers = response['headers']
+                cookies = response['cookies']
+                content = response['content']
+                wordlists_data = get_contextual_wordlist(url, headers, api_type, api_key, size, cookies=cookies, content=content)
+
+            else:
+                wordlists_data = get_contextual_wordlist(url, headers, api_type, api_key, size)
+
             print(wordlists_data)
             wordlist = '\n'.join(wordlists_data['wordlist'])
 
         except (json.JSONDecodeError, KeyError) as e:
-            print(f"Error parsing AI response. Try again. Error: {e}")
+            print(f"Error parsing AI response. The Wordlist size may have been too big for your max_tokens. Try again. Error: {e}")
             return
 
         if wordlist:
