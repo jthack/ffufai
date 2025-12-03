@@ -183,7 +183,12 @@ def main():
 
     if args.wordlists:
         try:
-            wordlists_data = get_contextual_wordlist(url, headers, api_type, api_key, args.max_wordlist_size)
+            if args.max_wordlist_size:
+                size = args.max_wordlist_size
+            else:
+                size = 200
+
+            wordlists_data = get_contextual_wordlist(url, headers, api_type, api_key, size)
             print(wordlists_data)
             wordlist = '\n'.join(wordlists_data['wordlist'])
 
