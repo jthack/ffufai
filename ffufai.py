@@ -67,7 +67,7 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     elif api_type == 'anthropic':
         client = anthropic.Anthropic(api_key=api_key)
         message = client.messages.create(
-            model="claude-3-5-sonnet-20240620",
+            model="claude-sonnet-4-20250514",
             max_tokens=1000,
             temperature=0,
             system="You are a helpful assistant that suggests file extensions for fuzzing based on URL and headers.",
@@ -79,17 +79,18 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
 
         return json.loads(message.content[0].text)
 
-def get_contextual_wordlist(url, headers, api_type, api_key):
+def get_contextual_wordlist(url, headers, api_type, api_key, max_size):
     prompt = f"""
-    Given the following URL and HTTP headers, suggest the most likely contextual wordlist for fuzzing this endpoint. You can be extensive.
-    Respond with a JSON object containing a list of subdomais, directories and files. The response will be parsed with json.loads(),
-    so it must be valid JSON. No preamble or yapping. Use the format: { {"subdomains": ["example1", "example2", ...]}, {"files" : ["file1", "file2"]} }.
-    Only suggest subdomains that make sense. For example, if domain is for a book shop
-    then don't suggest footbal as a subdomain. Also, if limited, prefer the subdomains which are more interesting.
+    Given the following URL and HTTP headers, suggest the most likely contextual wordlist for content discovery on this endpoint.
+    Be as extensive as possible, provide the maximum number of directories and files that make sense for the endpoint.
+    Try to create a list of size {max_size}.
+    Respond with a JSON object containing a list of directories and files. The response will be parsed with json.loads(),
+    so it must be valid JSON. No preamble or yapping. Use the format: { {"wordlist": ["dir1", "dir2", "file1", "file2"]} }.
+    Only make suggestions that make sense. For example, if domain is for a book shop
+    then don't suggest footbal as a directory. Also, if limited, prefer the files and directories which are more interesting.
     The URL path is great to look at for ideas, and so is the brand behind the URL.
-    Focus on subdomains relevant to the identified industry and technology stack. Include technology-specific subdomains.
-    For example, if it says presentations, then it's likely there
-    are powerpoints or pdfs in there. If the path is /js/ then it's good to use js as an extension.
+    Focus on contents relevant to the identified industry and technology stack. Include technology-specific files.
+    For example, if it says presentations, then it's likely there are powerpoints or pdfs in there. If the path is /js/ then it's good to fuzz for JS files.
 
     Example 1: WordPress Blog
     URL: https://blog.techstartup.io/wp-content/uploads/2024/FUZZ
@@ -102,11 +103,8 @@ def get_contextual_wordlist(url, headers, api_type, api_key):
 
     Response:
     {{
-      "subdomains": ["dev-blog", "staging-blog", "admin", "api", "cdn", "media", "assets", "wp", "wordpress", "backup"],
-      "directories": ["wp-content", "wp-includes", "wp-admin", "uploads", "themes", "plugins", "2024", "2023", "backup", "cache"],
-      "files": ["wp-config.php", "xmlrpc.php", "wp-login.php", "readme.html", ".htaccess", "wp-config.php.bak", "debug.log"],
+      "wordlist": ["wp-content", "wp-includes", "wp-admin", "uploads", "themes", "plugins", "2024", "2023", "backup", "cache", "wp-config.php", "xmlrpc.php", "wp-login.php", "readme.html", ".htaccess", "wp-config.php.bak", "debug.log"],
     }}
-
 
     Example 2: E-commerce Platform
     URL: https://shop.globalretail.com/checkout/payment/FUZZ
@@ -121,9 +119,7 @@ def get_contextual_wordlist(url, headers, api_type, api_key):
 
     Response:
     {{
-      "subdomains": ["admin-shop", "staging-shop", "dev", "test", "api", "payment", "checkout", "secure", "orders", "inventory", "warehouse", "cdn-shop"],
-      "directories": ["checkout", "payment", "api", "admin", "account", "orders", "products", "cart", "invoice", "App_Data", "bin", "Content"],
-      "files": ["web.config", "Global.asax", "payment.aspx", "checkout.aspx", "web.config.bak", "App_Data.mdf", "connectionstrings.config"],
+      "wordlist": ["checkout", "payment", "api", "admin", "account", "orders", "products", "cart", "invoice", "App_Data", "bin", "Content", "web.config", "Global.asax", "payment.aspx", "checkout.aspx", "web.config.bak", "App_Data.mdf", "connectionstrings.config"],
     }}
 
     URL: {url}
@@ -147,7 +143,7 @@ def get_contextual_wordlist(url, headers, api_type, api_key):
         client = anthropic.Anthropic(api_key=api_key)
         message = client.messages.create(
             model="claude-sonnet-4-20250514",
-            max_tokens=1000,
+            max_tokens=10000,
             temperature=0,
             system="You are a helpful assistant that suggests wordlists for fuzzing based on URL and headers.",
             messages=[
@@ -161,8 +157,8 @@ def main():
     parser = argparse.ArgumentParser(description='ffufai - AI-powered ffuf wrapper')
     parser.add_argument('--ffuf-path', default='ffuf', help='Path to ffuf executable')
     parser.add_argument('--max-extensions', type=int, default=4, help='Maximum number of extensions to suggest')
-    parser.add_argument('--extensions', action='store_true', help='Generate extensions')
     parser.add_argument('--wordlists', action='store_true', help='Generate contextual wordlists')
+    parser.add_argument('--max-wordlist-size', type=int, help="The maximum size of the generated wordlist")
     args, unknown = parser.parse_known_args()
 
     # Find the -u argument in the unknown args
@@ -184,7 +180,26 @@ def main():
 
     api_type, api_key = get_api_key()
 
-    if args.extensions:
+
+    if args.wordlists:
+        try:
+            wordlists_data = get_contextual_wordlist(url, headers, api_type, api_key, args.max_wordlist_size)
+            print(wordlists_data)
+            wordlist = '\n'.join(wordlists_data['wordlist'])
+
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"Error parsing AI response. Try again. Error: {e}")
+            return
+
+        if wordlist:
+            file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt')
+            file.write(wordlist)
+            file.close()
+            ffuf_command = [args.ffuf_path] + unknown + ['-w', file.name]
+            subprocess.run(ffuf_command)
+
+
+    else:
         try:
             extensions_data = get_ai_extensions(url, headers, api_type, api_key, args.max_extensions)
             print(extensions_data)
@@ -197,49 +212,6 @@ def main():
         ffuf_command = [args.ffuf_path] + unknown + ['-e', extensions]
 
         subprocess.run(ffuf_command)
-
-    if args.wordlists:
-        print("wordlists")
-        try:
-            wordlists_data = get_contextual_wordlist(url, headers, api_type, api_key)
-            print(wordlists_data)
-            subdomains = '\n'.join(wordlists_data['subdomains'])
-            directories = '\n'.join(wordlists_data['directories'])
-            files = '\n'.join(wordlists_data['files'])
-
-        except (json.JSONDecodeError, KeyError) as e:
-            print(f"Error parsing AI response. Try again. Error: {e}")
-            return
-
-        if subdomains:
-            domain = parsed_url.netloc
-            domain_parts = domain.split('.')
-            if len(domain_parts) > 2:
-                root_domain = '.'.join(domain_parts[-2:])
-            else:
-                root_domain = domain
-
-            sub_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt')
-            sub_file.write(subdomains)
-            sub_file.close()
-
-            subdomain_url = f'{parsed_url.scheme}://FUZZ.{root_domain}'
-            ffuf_command = [args.ffuf_path] + unknown +  ['-u', subdomain_url, '-w', sub_file.name]
-            subprocess.run(ffuf_command)
-
-        if directories:
-            dir_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt')
-            dir_file.write(directories)
-            dir_file.close()
-            ffuf_command = [args.ffuf_path] + unknown + ['-w', dir_file.name]
-            subprocess.run(ffuf_command)
-
-        if files:
-            files_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt')
-            files_file.write(files)
-            files_file.close()
-            ffuf_command = [args.ffuf_path] + unknown + ['-w', files_file.name]
-            subprocess.run(ffuf_command)
 
 
 if __name__ == '__main__':
