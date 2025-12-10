@@ -32,6 +32,8 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 ## Installation
 
+### Option 1: Local Installation
+
 1. Clone this repository:
    ```
    git clone https://github.com/jthack/ffufai
@@ -54,17 +56,74 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    ```
    Replace "/full/path/to/ffufai.py" with the actual full path to where you cloned the repository.
 
-5. Set up your API key as an environment variable:
-   For OpenAI:
+### Option 2: Docker Installation
+
+1. Clone this repository:
    ```
-   export OPENAI_API_KEY='your-api-key-here'
-   ```
-   Or for Anthropic:
-   ```
-   export ANTHROPIC_API_KEY='your-api-key-here'
+   git clone https://github.com/jthack/ffufai
+   cd ffufai
    ```
 
-   You can add these lines to your `~/.bashrc` or `~/.zshrc` file to make them permanent.
+2. Build the Docker image:
+   ```
+   docker build -t ffufai .
+   ```
+
+3. Run the container (choose one of these methods):
+
+   **Method 1: Pass API keys directly** (quick but less secure):
+   ```bash
+   docker run -e OPENAI_API_KEY="sk-yourkeyhere..." ffufai -u http://example.com/FUZZ -w /path/to/wordlist
+   # OR
+   docker run -e ANTHROPIC_API_KEY="sk-ant-yourkeyhere..." ffufai -u http://example.com/FUZZ -w /path/to/wordlist
+   ```
+
+   **Method 2: Use environment variables** (recommended):
+   ```bash
+   # First, export your API keys
+   export OPENAI_API_KEY="sk-yourkeyhere..."
+   export ANTHROPIC_API_KEY="sk-ant-yourkeyhere..."
+
+   # Then run the container using those environment variables
+   docker run -e OPENAI_API_KEY="${OPENAI_API_KEY}" ffufai -u http://example.com/FUZZ -w /path/to/wordlist
+   ```
+
+   **Method 3: Use an environment file** (most secure):
+   ```bash
+   # Create a .env file with your keys
+   echo "OPENAI_API_KEY=sk-yourkeyhere..." > .env
+   echo "ANTHROPIC_API_KEY=sk-ant-yourkeyhere..." >> .env
+
+   # Run the container with the env file
+   docker run --env-file .env ffufai -u http://example.com/FUZZ -w /path/to/wordlist
+   ```
+
+   **Using wordlists with Docker:**
+   To use local wordlists, you'll need to mount them into the container:
+   ```bash
+   docker run -v $(pwd)/wordlists:/wordlists \
+     -e OPENAI_API_KEY="${OPENAI_API_KEY}" \
+     ffufai -u http://example.com/FUZZ -w /wordlists/wordlist.txt
+   ```
+
+Note: Replace `sk-yourkeyhere...` and `sk-ant-yourkeyhere...` with your actual API keys.
+
+### API Key Setup
+
+Set up your API key as an environment variable:
+
+For OpenAI:
+```
+export OPENAI_API_KEY='your-api-key-here'
+```
+Or for Anthropic:
+```
+export ANTHROPIC_API_KEY='your-api-key-here'
+```
+
+You can add these lines to your `~/.bashrc` or `~/.zshrc` file to make them permanent.
+
+If using Docker, you'll need to pass these environment variables when running the container as shown in the Docker installation steps above.
 
 ## Usage
 
@@ -86,16 +145,16 @@ ffufai will automatically suggest extensions based on the URL and add them to th
 
 ffufai accepts all the parameters that ffuf does, plus a few additional ones:
 
-- `--ffuf-path`: Specifies the path to the ffuf executable. Default is 'ffuf'.  
+- `--ffuf-path`: Specifies the path to the ffuf executable. Default is 'ffuf'.
   Example: `ffufai --ffuf-path /usr/local/bin/ffuf -u https://example.com/FUZZ -w wordlist.txt`
 
-- `--max-extensions`: Sets the maximum number of extensions to suggest. Default is 4.  
+- `--max-extensions`: Sets the maximum number of extensions to suggest. Default is 4.
   Example: `ffufai --max-extensions 6 -u https://example.com/FUZZ -w wordlist.txt`
 
-- `-u`: Specifies the target URL. This parameter is required and should include the FUZZ keyword.  
+- `-u`: Specifies the target URL. This parameter is required and should include the FUZZ keyword.
   Example: `ffufai -u https://example.com/FUZZ -w wordlist.txt`
 
-- `-w`: Specifies the wordlist to use for fuzzing. This is a standard ffuf parameter.  
+- `-w`: Specifies the wordlist to use for fuzzing. This is a standard ffuf parameter.
   Example: `ffufai -u https://example.com/FUZZ -w /path/to/wordlist.txt`
 
 All other ffuf parameters can be used as normal. For a full list of ffuf parameters, refer to the ffuf documentation.
@@ -106,7 +165,7 @@ All other ffuf parameters can be used as normal. For a full list of ffuf paramet
 - All ffuf parameters are passed through to ffuf, so you can use any ffuf option with ffufai.
 - If both OpenAI and Anthropic API keys are set, ffufai will prefer the OpenAI key.
 
-HUGE Shoutout to zlz, aka Sam Curry, for the amazing idea to make this project. He suggested it and 2 hours later, here it is :)    
+HUGE Shoutout to zlz, aka Sam Curry, for the amazing idea to make this project. He suggested it and 2 hours later, here it is :)
 <img width="744" alt="image" src="https://github.com/user-attachments/assets/9f914cc4-fe5f-4dbc-b7d9-548473ea2134">
 
 ## Troubleshooting
