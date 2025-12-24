@@ -63,7 +63,10 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    ```
    export ANTHROPIC_API_KEY='your-api-key-here'
    ```
-
+   Or for Ollama:
+   ```
+   export OLLAMA_API_KEY='ollama'
+   ```
    You can add these lines to your `~/.bashrc` or `~/.zshrc` file to make them permanent.
 
 ## Usage
