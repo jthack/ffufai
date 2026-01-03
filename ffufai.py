@@ -11,16 +11,49 @@ from urllib.parse import urlparse
 import tempfile
 import os
 from bs4 import BeautifulSoup
+from google import genai
+from google.genai import types
+import re
+
+def extract_json(text: str) -> dict:
+    """
+    Extracts the first valid JSON object from a string.
+    Handles Gemini adding prose or ```json fences.
+    """
+    if not text:
+        raise ValueError("Empty response from model")
+
+    # Remove markdown fences if present
+    text = text.strip()
+    text = re.sub(r"^```json", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"```$", "", text)
+
+    # Try direct parse first
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # Fallback: extract first JSON object
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if match:
+        return json.loads(match.group(0))
+
+    raise ValueError(f"No valid JSON found in response:\n{text}")
 
 def get_api_key():
     openai_key = os.getenv('OPENAI_API_KEY')
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+    gemini_key = os.getenv('GEMINI_API_KEY')
+
     if anthropic_key:
         return ('anthropic', anthropic_key)
     elif openai_key:
         return ('openai', openai_key)
+    elif gemini_key:
+        return ('gemini', gemini_key)
     else:
-        raise ValueError("No API key found. Please set OPENAI_API_KEY or ANTHROPIC_API_KEY.")
+        raise ValueError("No API key found. Please set OPENAI_API_KEY/ANTHROPIC_API_KEY/GEMINI_API_KEY.")
 
 
 def get_response(url):
@@ -57,10 +90,53 @@ def get_response(url):
 def get_headers(url):
     try:
         response = requests.head(url, allow_redirects=True)
+        if not response.headers:
+            response = requests.get(url, allow_redirects=True)
         return dict(response.headers)
     except requests.RequestException as e:
         print(f"Error fetching headers: {e}")
         return {"Header": "Error fetching headers."}
+
+EXTENSION_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "extensions": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": "^\\.[a-zA-Z0-9]+$"
+            },
+            "minItems": 1,
+            "maxItems": 5
+        }
+    },
+    "required": ["extensions"]
+}
+
+def heuristic_extensions(url, headers, max_extensions):
+    exts = []
+
+    server = str(headers.get("Server", "")).lower()
+    powered = str(headers.get("X-Powered-By", "")).lower()
+    ct = str(headers.get("Content-Type", "")).lower()
+
+    if "apache" in server or "nginx" in server:
+        exts += [".html", ".php", ".bak"]
+
+    if "iis" in server or "asp.net" in powered:
+        exts += [".aspx", ".asp", ".config"]
+
+    if "json" in ct:
+        exts += [".json"]
+
+    if "javascript" in ct:
+        exts += [".js"]
+
+    if not exts:
+        exts = [".html", ".php", ".txt"]
+
+    return exts[:max_extensions]
+
 
 def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     prompt = f"""
@@ -111,6 +187,30 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
 
 
         return json.loads(message.content[0].text)
+
+    elif api_type == 'gemini':
+        client = genai.Client(api_key=api_key)
+
+        response = client.models.generate_content(
+            model="models/gemini-2.5-flash",
+            contents=f"URL: {url}\nHeaders: {headers}",
+            config=types.GenerateContentConfig(
+                temperature=0.0,
+                max_output_tokens=128,
+                response_mime_type="application/json",
+                response_schema=EXTENSION_SCHEMA
+            )
+        )
+
+        parsed = response.parsed
+
+        if isinstance(parsed, dict):
+            return parsed
+
+        # Gemini failed schema compliance → deterministic fallback
+        return {"extensions": heuristic_extensions(url, headers, max_extensions)}
+
+
 
 def get_contextual_wordlist(url, headers, api_type, api_key, max_size, cookies=None, content=None):
     prompt = f"""
@@ -188,6 +288,24 @@ def get_contextual_wordlist(url, headers, api_type, api_key, max_size, cookies=N
 
         return json.loads(message.content[0].text)
 
+    
+
+def validate_extensions(data, max_extensions):
+    if not isinstance(data, dict):
+        raise ValueError("AI output is not a JSON object")
+
+    exts = data.get("extensions")
+    if not isinstance(exts, list):
+        raise ValueError("Missing 'extensions' list")
+
+    clean = []
+    for e in exts:
+        if isinstance(e, str) and e.startswith("."):
+            clean.append(e)
+
+    return clean[:max_extensions]
+
+
 def main():
     parser = argparse.ArgumentParser(description='ffufai - AI-powered ffuf wrapper')
     parser.add_argument('--ffuf-path', default='ffuf', help='Path to ffuf executable')
@@ -253,7 +371,9 @@ def main():
         try:
             extensions_data = get_ai_extensions(url, headers, api_type, api_key, args.max_extensions)
             print(extensions_data)
-            extensions = ','.join(extensions_data['extensions'][:args.max_extensions])
+            extensions = ','.join(
+                validate_extensions(extensions_data, args.max_extensions)
+            )
 
         except (json.JSONDecodeError, KeyError) as e:
             print(f"Error parsing AI response. Try again. Error: {e}")

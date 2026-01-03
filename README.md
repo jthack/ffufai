@@ -40,7 +40,7 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
 
 2. Install the required Python packages:
    ```
-   pip install requests openai anthropic
+   pip install requests openai anthropic google-generativeai distro httplib2
    ```
 
 3. Make the script executable:
@@ -62,6 +62,10 @@ ffufai is an AI-powered wrapper for the popular web fuzzer ffuf. It automaticall
    Or for Anthropic:
    ```
    export ANTHROPIC_API_KEY='your-api-key-here'
+   ```
+   Or for Gemini:
+   ```
+   export GEMINI_API_KEY='your-api-key-here'
    ```
 
    You can add these lines to your `~/.bashrc` or `~/.zshrc` file to make them permanent.
