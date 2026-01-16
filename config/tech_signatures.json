@@ -1,0 +1,804 @@
+{
+  "technologies": {
+    "wordpress": {
+      "headers": ["x-powered-by:wordpress", "link:rel=\"https://api.w.org/\""],
+      "scripts": ["wp-includes", "wp-content"],
+      "html": ["wp-content", "wp-includes"]
+    },
+    "drupal": {
+      "headers": ["x-generator:drupal", "drupal"],
+      "scripts": ["drupal", "drupal.js"],
+      "html": ["drupal"]
+    },
+    "joomla": {
+      "headers": ["joomla", "x-powered-by:joomla"],
+      "scripts": ["joomla"],
+      "html": ["joomla"]
+    },
+    "magento": {
+      "headers": ["x-magento", "magento"],
+      "scripts": ["mage", "magento"],
+      "html": ["mage", "magento"]
+    },
+    "shopify": {
+      "headers": ["x-shopify", "x-shopify-stage", "shopify"],
+      "scripts": ["shopify"],
+      "html": ["shopify"]
+    },
+    "typo3": {
+      "headers": ["typo3"],
+      "scripts": ["typo3"],
+      "html": ["typo3"]
+    },
+    "squarespace": {
+      "headers": ["x-servedby:squarespace"],
+      "scripts": ["squarespace"],
+      "html": ["squarespace"]
+    },
+    "wix": {
+      "headers": ["x-wix", "wix"],
+      "scripts": ["wix"],
+      "html": ["wix"]
+    },
+    "weebly": {
+      "headers": ["weebly"],
+      "scripts": ["weebly"],
+      "html": ["weebly"]
+    },
+    "ghost": {
+      "headers": ["ghost"],
+      "scripts": ["ghost"],
+      "html": ["ghost"]
+    },
+    "shopware": {
+      "headers": ["shopware"],
+      "scripts": ["shopware"],
+      "html": ["shopware"]
+    },
+    "prestashop": {
+      "headers": ["prestashop"],
+      "scripts": ["prestashop"],
+      "html": ["prestashop"]
+    },
+    "bigcommerce": {
+      "headers": ["x-bc", "bigcommerce"],
+      "scripts": ["bigcommerce"],
+      "html": ["bigcommerce"]
+    },
+    "opencart": {
+      "headers": ["opencart"],
+      "scripts": ["opencart"],
+      "html": ["opencart"]
+    },
+    "salesforce-commerce": {
+      "headers": ["salesforce commerce", "dwsid"],
+      "scripts": ["demandware"],
+      "html": ["demandware"]
+    },
+    "sap-commerce": {
+      "headers": ["hybris"],
+      "scripts": ["hybris"],
+      "html": ["hybris"]
+    },
+    "adobe-commerce": {
+      "headers": ["x-magento"],
+      "scripts": ["magento"],
+      "html": ["magento"]
+    },
+    "rails": {
+      "headers": ["x-runtime", "rails"],
+      "scripts": ["rails"],
+      "html": ["rails"]
+    },
+    "sinatra": {
+      "headers": ["sinatra"],
+      "scripts": ["sinatra"],
+      "html": ["sinatra"]
+    },
+    "phoenix": {
+      "headers": ["phoenix"],
+      "scripts": ["phoenix"],
+      "html": ["phoenix"]
+    },
+    "express": {
+      "headers": ["express"],
+      "scripts": ["express"],
+      "html": ["express"]
+    },
+    "nestjs": {
+      "headers": ["nestjs"],
+      "scripts": ["nestjs"],
+      "html": ["nestjs"]
+    },
+    "nextjs": {
+      "headers": ["x-powered-by:next.js"],
+      "scripts": ["/_next/"],
+      "html": ["__next"]
+    },
+    "nuxt": {
+      "headers": [],
+      "scripts": ["/_nuxt/"],
+      "html": ["__nuxt"]
+    },
+    "gatsby": {
+      "headers": ["gatsby"],
+      "scripts": ["gatsby"],
+      "html": ["gatsby"]
+    },
+    "remix": {
+      "headers": ["remix"],
+      "scripts": ["remix"],
+      "html": ["remix"]
+    },
+    "svelte": {
+      "headers": ["svelte"],
+      "scripts": ["svelte"],
+      "html": ["svelte"]
+    },
+    "sveltekit": {
+      "headers": ["sveltekit"],
+      "scripts": ["sveltekit"],
+      "html": ["sveltekit"]
+    },
+    "astro": {
+      "headers": ["astro"],
+      "scripts": ["astro"],
+      "html": ["astro"]
+    },
+    "vite": {
+      "headers": ["vite"],
+      "scripts": ["/@vite", "vite"],
+      "html": ["vite"]
+    },
+    "webpack": {
+      "headers": [],
+      "scripts": ["webpack"],
+      "html": ["webpack"]
+    },
+    "angular": {
+      "headers": [],
+      "scripts": ["angular"],
+      "html": ["ng-version", "ng-app"]
+    },
+    "react": {
+      "headers": [],
+      "scripts": ["react", "react-dom"],
+      "html": ["data-reactroot", "reactroot"]
+    },
+    "vue": {
+      "headers": [],
+      "scripts": ["vue"],
+      "html": ["data-v-"]
+    },
+    "ember": {
+      "headers": ["ember"],
+      "scripts": ["ember"],
+      "html": ["ember"]
+    },
+    "backbone": {
+      "headers": ["backbone"],
+      "scripts": ["backbone"],
+      "html": ["backbone"]
+    },
+    "jquery": {
+      "headers": ["jquery"],
+      "scripts": ["jquery"],
+      "html": ["jquery"]
+    },
+    "bootstrap": {
+      "headers": [],
+      "scripts": ["bootstrap"],
+      "html": ["bootstrap"]
+    },
+    "tailwind": {
+      "headers": [],
+      "scripts": ["tailwind"],
+      "html": ["tailwind"]
+    },
+    "foundation": {
+      "headers": [],
+      "scripts": ["foundation"],
+      "html": ["foundation"]
+    },
+    "bulma": {
+      "headers": [],
+      "scripts": ["bulma"],
+      "html": ["bulma"]
+    },
+    "material-ui": {
+      "headers": [],
+      "scripts": ["material-ui", "mui"],
+      "html": ["mui"]
+    },
+    "chakra-ui": {
+      "headers": [],
+      "scripts": ["chakra-ui"],
+      "html": ["chakra"]
+    },
+    "ant-design": {
+      "headers": [],
+      "scripts": ["antd", "ant-design"],
+      "html": ["antd"]
+    },
+    "aspnet": {
+      "headers": ["x-powered-by:asp.net", "asp.net", "x-aspnet-version"],
+      "scripts": [],
+      "html": ["__viewstate"]
+    },
+    "dotnet": {
+      "headers": ["asp.net", "x-powered-by:asp.net"],
+      "scripts": [],
+      "html": ["__doPostBack"]
+    },
+    "php": {
+      "headers": ["x-powered-by:php", "php"],
+      "scripts": [],
+      "html": ["php"]
+    },
+    "symfony": {
+      "headers": ["symfony"],
+      "scripts": ["symfony"],
+      "html": ["symfony"]
+    },
+    "codeigniter": {
+      "headers": ["codeigniter"],
+      "scripts": ["codeigniter"],
+      "html": ["codeigniter"]
+    },
+    "yii": {
+      "headers": ["yii"],
+      "scripts": ["yii"],
+      "html": ["yii"]
+    },
+    "cakephp": {
+      "headers": ["cakephp"],
+      "scripts": ["cakephp"],
+      "html": ["cakephp"]
+    },
+    "zend": {
+      "headers": ["zend"],
+      "scripts": ["zend"],
+      "html": ["zend"]
+    },
+    "lumen": {
+      "headers": ["lumen"],
+      "scripts": ["lumen"],
+      "html": ["lumen"]
+    },
+    "slim": {
+      "headers": ["slim"],
+      "scripts": ["slim"],
+      "html": ["slim"]
+    },
+    "fastapi": {
+      "headers": ["fastapi"],
+      "scripts": [],
+      "html": ["swagger-ui"]
+    },
+    "django": {
+      "headers": ["csrftoken", "sessionid"],
+      "scripts": ["django"],
+      "html": ["django"]
+    },
+    "flask": {
+      "headers": ["flask"],
+      "scripts": ["flask"],
+      "html": ["flask"]
+    },
+    "tornado": {
+      "headers": ["tornado"],
+      "scripts": ["tornado"],
+      "html": ["tornado"]
+    },
+    "spring": {
+      "headers": ["spring", "x-application-context"],
+      "scripts": [],
+      "html": ["spring"]
+    },
+    "struts": {
+      "headers": ["struts"],
+      "scripts": ["struts"],
+      "html": ["struts"]
+    },
+    "grails": {
+      "headers": ["grails"],
+      "scripts": ["grails"],
+      "html": ["grails"]
+    },
+    "jsp": {
+      "headers": ["jsp"],
+      "scripts": ["jsp"],
+      "html": ["jsp"]
+    },
+    "playframework": {
+      "headers": ["playframework"],
+      "scripts": ["playframework"],
+      "html": ["playframework"]
+    },
+    "dropwizard": {
+      "headers": ["dropwizard"],
+      "scripts": ["dropwizard"],
+      "html": ["dropwizard"]
+    },
+    "micronaut": {
+      "headers": ["micronaut"],
+      "scripts": ["micronaut"],
+      "html": ["micronaut"]
+    },
+    "quarkus": {
+      "headers": ["quarkus"],
+      "scripts": ["quarkus"],
+      "html": ["quarkus"]
+    },
+    "node": {
+      "headers": ["node", "express"],
+      "scripts": ["node"],
+      "html": ["node"]
+    },
+    "go": {
+      "headers": ["go", "golang"],
+      "scripts": [],
+      "html": ["go"]
+    },
+    "gin": {
+      "headers": ["gin"],
+      "scripts": ["gin"],
+      "html": ["gin"]
+    },
+    "echo": {
+      "headers": ["echo"],
+      "scripts": ["echo"],
+      "html": ["echo"]
+    },
+    "fiber": {
+      "headers": ["fiber"],
+      "scripts": ["fiber"],
+      "html": ["fiber"]
+    },
+    "beego": {
+      "headers": ["beego"],
+      "scripts": ["beego"],
+      "html": ["beego"]
+    },
+    "graphql": {
+      "headers": [],
+      "scripts": [],
+      "html": ["graphql", "graphiql", "graphql-playground"]
+    },
+    "apollo": {
+      "headers": ["apollo"],
+      "scripts": ["apollo"],
+      "html": ["apollo"]
+    },
+    "hasura": {
+      "headers": ["hasura"],
+      "scripts": ["hasura"],
+      "html": ["hasura"]
+    },
+    "postgraphile": {
+      "headers": ["postgraphile"],
+      "scripts": ["postgraphile"],
+      "html": ["postgraphile"]
+    },
+    "swagger": {
+      "headers": ["swagger"],
+      "scripts": ["swagger"],
+      "html": ["swagger"]
+    },
+    "openapi": {
+      "headers": ["openapi"],
+      "scripts": ["openapi"],
+      "html": ["openapi"]
+    },
+    "redoc": {
+      "headers": ["redoc"],
+      "scripts": ["redoc"],
+      "html": ["redoc"]
+    },
+    "auth0": {
+      "headers": ["auth0"],
+      "scripts": ["auth0"],
+      "html": ["auth0"]
+    },
+    "okta": {
+      "headers": ["okta"],
+      "scripts": ["okta"],
+      "html": ["okta"]
+    },
+    "keycloak": {
+      "headers": ["keycloak"],
+      "scripts": ["keycloak"],
+      "html": ["keycloak"]
+    },
+    "ping-identity": {
+      "headers": ["ping identity", "pingone", "pingfederate"],
+      "scripts": ["ping"],
+      "html": ["ping"]
+    },
+    "azure-ad": {
+      "headers": ["microsoft", "azure"],
+      "scripts": ["aad", "msal"],
+      "html": ["msal"]
+    },
+    "google-identity": {
+      "headers": ["google"],
+      "scripts": ["gsi", "google-identity"],
+      "html": ["google-identity"]
+    },
+    "cloudflare": {
+      "headers": ["cf-ray", "cloudflare"],
+      "scripts": [],
+      "html": ["cloudflare"]
+    },
+    "akamai": {
+      "headers": ["akamai"],
+      "scripts": [],
+      "html": ["akamai"]
+    },
+    "fastly": {
+      "headers": ["fastly"],
+      "scripts": [],
+      "html": ["fastly"]
+    },
+    "imperva": {
+      "headers": ["incap_ses", "imperva"],
+      "scripts": [],
+      "html": ["imperva"]
+    },
+    "sucuri": {
+      "headers": ["sucuri"],
+      "scripts": [],
+      "html": ["sucuri"]
+    },
+    "cloudfront": {
+      "headers": ["cloudfront"],
+      "scripts": [],
+      "html": ["cloudfront"]
+    },
+    "azure-frontdoor": {
+      "headers": ["azure", "frontdoor"],
+      "scripts": [],
+      "html": ["frontdoor"]
+    },
+    "vercel": {
+      "headers": ["vercel", "x-vercel"],
+      "scripts": [],
+      "html": ["vercel"]
+    },
+    "netlify": {
+      "headers": ["netlify"],
+      "scripts": [],
+      "html": ["netlify"]
+    },
+    "heroku": {
+      "headers": ["heroku"],
+      "scripts": [],
+      "html": ["heroku"]
+    },
+    "flyio": {
+      "headers": ["fly.io"],
+      "scripts": [],
+      "html": ["fly.io"]
+    },
+    "render": {
+      "headers": ["render"],
+      "scripts": [],
+      "html": ["render"]
+    },
+    "digitalocean": {
+      "headers": ["digitalocean"],
+      "scripts": [],
+      "html": ["digitalocean"]
+    },
+    "aws": {
+      "headers": ["aws", "x-amz"],
+      "scripts": [],
+      "html": ["aws", "amazonaws"]
+    },
+    "azure": {
+      "headers": ["azure", "x-ms"],
+      "scripts": [],
+      "html": ["azure"]
+    },
+    "gcp": {
+      "headers": ["google", "x-goog"],
+      "scripts": [],
+      "html": ["googleapis", "googlecloud"]
+    },
+    "sentry": {
+      "headers": ["sentry"],
+      "scripts": ["sentry"],
+      "html": ["sentry"]
+    },
+    "datadog": {
+      "headers": ["datadog"],
+      "scripts": ["datadog"],
+      "html": ["datadog"]
+    },
+    "newrelic": {
+      "headers": ["newrelic"],
+      "scripts": ["newrelic"],
+      "html": ["newrelic"]
+    },
+    "logrocket": {
+      "headers": ["logrocket"],
+      "scripts": ["logrocket"],
+      "html": ["logrocket"]
+    },
+    "segment": {
+      "headers": ["segment"],
+      "scripts": ["segment"],
+      "html": ["segment"]
+    },
+    "gtm": {
+      "headers": ["googletagmanager", "gtm"],
+      "scripts": ["googletagmanager", "gtm"],
+      "html": ["googletagmanager", "gtm"]
+    },
+    "google-analytics": {
+      "headers": ["google-analytics", "ga"],
+      "scripts": ["google-analytics", "gtag"],
+      "html": ["google-analytics", "gtag"]
+    },
+    "hotjar": {
+      "headers": ["hotjar"],
+      "scripts": ["hotjar"],
+      "html": ["hotjar"]
+    },
+    "mixpanel": {
+      "headers": ["mixpanel"],
+      "scripts": ["mixpanel"],
+      "html": ["mixpanel"]
+    },
+    "amplitude": {
+      "headers": ["amplitude"],
+      "scripts": ["amplitude"],
+      "html": ["amplitude"]
+    },
+    "matomo": {
+      "headers": ["matomo"],
+      "scripts": ["matomo"],
+      "html": ["matomo"]
+    },
+    "pendo": {
+      "headers": ["pendo"],
+      "scripts": ["pendo"],
+      "html": ["pendo"]
+    },
+    "intercom": {
+      "headers": ["intercom"],
+      "scripts": ["intercom"],
+      "html": ["intercom"]
+    },
+    "zendesk": {
+      "headers": ["zendesk"],
+      "scripts": ["zendesk"],
+      "html": ["zendesk"]
+    },
+    "drift": {
+      "headers": ["drift"],
+      "scripts": ["drift"],
+      "html": ["drift"]
+    },
+    "crisp": {
+      "headers": ["crisp"],
+      "scripts": ["crisp"],
+      "html": ["crisp"]
+    },
+    "tawk": {
+      "headers": ["tawk"],
+      "scripts": ["tawk"],
+      "html": ["tawk"]
+    },
+    "freshchat": {
+      "headers": ["freshchat"],
+      "scripts": ["freshchat"],
+      "html": ["freshchat"]
+    },
+    "cloudinary": {
+      "headers": ["cloudinary"],
+      "scripts": ["cloudinary"],
+      "html": ["cloudinary"]
+    },
+    "recaptcha": {
+      "headers": ["recaptcha"],
+      "scripts": ["recaptcha"],
+      "html": ["recaptcha"]
+    },
+    "hcaptcha": {
+      "headers": ["hcaptcha"],
+      "scripts": ["hcaptcha"],
+      "html": ["hcaptcha"]
+    },
+    "cdnjs": {
+      "headers": [],
+      "scripts": ["cdnjs"],
+      "html": ["cdnjs"]
+    },
+    "jsdelivr": {
+      "headers": [],
+      "scripts": ["jsdelivr"],
+      "html": ["jsdelivr"]
+    },
+    "unpkg": {
+      "headers": [],
+      "scripts": ["unpkg"],
+      "html": ["unpkg"]
+    },
+    "google-fonts": {
+      "headers": [],
+      "scripts": ["fonts.googleapis.com"],
+      "html": ["fonts.googleapis.com"]
+    },
+    "cloudflare-turnstile": {
+      "headers": ["cf-turnstile"],
+      "scripts": ["turnstile"],
+      "html": ["cf-turnstile"]
+    },
+    "firebase": {
+      "headers": ["firebase"],
+      "scripts": ["firebase"],
+      "html": ["firebase"]
+    },
+    "supabase": {
+      "headers": ["supabase"],
+      "scripts": ["supabase"],
+      "html": ["supabase"]
+    },
+    "appwrite": {
+      "headers": ["appwrite"],
+      "scripts": ["appwrite"],
+      "html": ["appwrite"]
+    },
+    "strapi": {
+      "headers": ["strapi"],
+      "scripts": ["strapi"],
+      "html": ["strapi"]
+    },
+    "directus": {
+      "headers": ["directus"],
+      "scripts": ["directus"],
+      "html": ["directus"]
+    },
+    "contentful": {
+      "headers": ["contentful"],
+      "scripts": ["contentful"],
+      "html": ["contentful"]
+    },
+    "sanity": {
+      "headers": ["sanity"],
+      "scripts": ["sanity"],
+      "html": ["sanity"]
+    },
+    "prismic": {
+      "headers": ["prismic"],
+      "scripts": ["prismic"],
+      "html": ["prismic"]
+    },
+    "docusaurus": {
+      "headers": ["docusaurus"],
+      "scripts": ["docusaurus"],
+      "html": ["docusaurus"]
+    },
+    "mkdocs": {
+      "headers": ["mkdocs"],
+      "scripts": ["mkdocs"],
+      "html": ["mkdocs"]
+    },
+    "hugo": {
+      "headers": ["hugo"],
+      "scripts": ["hugo"],
+      "html": ["hugo"]
+    },
+    "jekyll": {
+      "headers": ["jekyll"],
+      "scripts": ["jekyll"],
+      "html": ["jekyll"]
+    },
+    "grafana": {
+      "headers": ["grafana"],
+      "scripts": ["grafana"],
+      "html": ["grafana"]
+    },
+    "kibana": {
+      "headers": ["kibana"],
+      "scripts": ["kibana"],
+      "html": ["kibana"]
+    },
+    "elasticsearch": {
+      "headers": ["elasticsearch"],
+      "scripts": ["elasticsearch"],
+      "html": ["elasticsearch"]
+    },
+    "logstash": {
+      "headers": ["logstash"],
+      "scripts": ["logstash"],
+      "html": ["logstash"]
+    },
+    "prometheus": {
+      "headers": ["prometheus"],
+      "scripts": ["prometheus"],
+      "html": ["prometheus"]
+    },
+    "loki": {
+      "headers": ["loki"],
+      "scripts": ["loki"],
+      "html": ["loki"]
+    },
+    "kubernetes": {
+      "headers": ["kubernetes"],
+      "scripts": ["kubernetes"],
+      "html": ["kubernetes"]
+    },
+    "helm": {
+      "headers": ["helm"],
+      "scripts": ["helm"],
+      "html": ["helm"]
+    },
+    "nginx": {
+      "headers": ["nginx"],
+      "scripts": [],
+      "html": ["nginx"]
+    },
+    "apache": {
+      "headers": ["apache"],
+      "scripts": [],
+      "html": ["apache"]
+    },
+    "caddy": {
+      "headers": ["caddy"],
+      "scripts": [],
+      "html": ["caddy"]
+    },
+    "traefik": {
+      "headers": ["traefik"],
+      "scripts": [],
+      "html": ["traefik"]
+    },
+    "haproxy": {
+      "headers": ["haproxy"],
+      "scripts": [],
+      "html": ["haproxy"]
+    },
+    "varnish": {
+      "headers": ["varnish"],
+      "scripts": [],
+      "html": ["varnish"]
+    },
+    "socketio": {
+      "headers": [],
+      "scripts": ["socket.io"],
+      "html": ["socket.io"]
+    },
+    "signalr": {
+      "headers": [],
+      "scripts": ["signalr"],
+      "html": ["signalr"]
+    },
+    "pusher": {
+      "headers": ["pusher"],
+      "scripts": ["pusher"],
+      "html": ["pusher"]
+    },
+    "algolia": {
+      "headers": ["algolia"],
+      "scripts": ["algolia"],
+      "html": ["algolia"]
+    },
+    "microsoft-clarity": {
+      "headers": ["clarity"],
+      "scripts": ["clarity.ms"],
+      "html": ["clarity"]
+    },
+    "bugsnag": {
+      "headers": ["bugsnag"],
+      "scripts": ["bugsnag"],
+      "html": ["bugsnag"]
+    },
+    "rollbar": {
+      "headers": ["rollbar"],
+      "scripts": ["rollbar"],
+      "html": ["rollbar"]
+    }
+  }
+}

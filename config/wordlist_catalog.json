@@ -1,0 +1,115 @@
+{
+  "lists": {
+    "common": {
+      "entries": ["admin", "api", "assets", "auth", "backup", "config", "debug", "health", "internal", "login", "logout", "public", "status"]
+    },
+    "admin": {
+      "entries": ["admin", "administrator", "admin-panel", "dashboard", "controlpanel", "cpanel"]
+    },
+    "api": {
+      "entries": ["api", "api/v1", "api/v2", "graphql", "swagger", "openapi.json", "docs", "redoc"]
+    },
+    "auth": {
+      "entries": ["login", "signin", "sign-in", "logout", "oauth", "sso", "session", "token", "mfa"]
+    },
+    "backup": {
+      "entries": ["backup", "backups", "dump", "db.sql", "db.dump", "archive.zip", "site.tar.gz"]
+    },
+    "debug": {
+      "entries": ["debug", "trace", "profiler", "healthz", "metrics"]
+    },
+    "static": {
+      "entries": ["static", "assets", "public", "js", "css", "images"]
+    },
+    "config": {
+      "entries": [".env", "config", "config.json", "settings", "settings.json", "application.yml", "application.properties"]
+    },
+    "wordpress": {
+      "entries": ["wp-admin", "wp-content", "wp-includes", "wp-login.php", "xmlrpc.php", "wp-config.php"]
+    },
+    "drupal": {
+      "entries": ["sites/default", "modules", "core", "user/login", "install.php"]
+    },
+    "joomla": {
+      "entries": ["administrator", "components", "modules", "configuration.php"]
+    },
+    "magento": {
+      "entries": ["app/etc", "pub", "var", "index.php", "app/bootstrap.php"]
+    },
+    "django": {
+      "entries": ["admin", "static", "media", "manage.py", "settings.py"]
+    },
+    "laravel": {
+      "entries": ["artisan", "storage", "routes", "vendor", ".env"]
+    },
+    "rails": {
+      "entries": ["config", "db", "app", "public", "config/database.yml"]
+    },
+    "spring": {
+      "entries": ["actuator", "application.yml", "application.properties", "WEB-INF"]
+    },
+    "dotnet": {
+      "entries": ["web.config", "appsettings.json", "bin", "App_Data"]
+    }
+  },
+  "profiles": {
+    "balanced": ["common", "api", "auth", "static"],
+    "critical": ["common", "admin", "auth", "backup", "config", "debug"],
+    "stealth": ["common", "auth"],
+    "depth": ["common", "admin", "api", "auth", "backup", "config", "debug", "static"],
+    "api-only": ["api", "auth", "debug"],
+    "spa": ["static", "api"],
+    "admin-heavy": ["admin", "auth", "config", "debug"],
+    "cloud-native": ["api", "config", "debug", "health"],
+    "legacy": ["common", "backup", "config"],
+    "mobile-backend": ["api", "auth"],
+    "partner-portal": ["auth", "admin", "api"],
+    "healthcheck": ["health", "debug"],
+    "cdn-edge": ["static"],
+    "auth-heavy": ["auth", "admin"],
+    "storage": ["backup", "static", "api"],
+    "payments": ["api", "auth", "config"]
+  },
+  "goals": {
+    "general": ["common"],
+    "auth-bypass": ["auth"],
+    "data-exfil": ["backup", "config"],
+    "rce": ["debug", "admin"],
+    "misconfig": ["config", "debug"],
+    "idor": ["api"],
+    "ssrf": ["api"],
+    "lfi": ["config", "debug"],
+    "sqli": ["api"],
+    "xss": ["api", "auth"],
+    "csrf": ["auth"],
+    "file-upload": ["api", "static"],
+    "secrets": ["config", "backup"],
+    "infra": ["health", "debug"],
+    "compliance": ["backup", "config"],
+    "webhooks": ["api"],
+    "graphql": ["api"],
+    "mobile": ["api"],
+    "bypass-waf": ["static", "api"]
+  },
+  "tech_map": {
+    "wordpress": ["wordpress"],
+    "drupal": ["drupal"],
+    "joomla": ["joomla"],
+    "magento": ["magento"],
+    "django": ["django"],
+    "laravel": ["laravel"],
+    "rails": ["rails"],
+    "spring": ["spring"],
+    "dotnet": ["dotnet"],
+    "grafana": ["admin", "auth", "api"],
+    "kibana": ["admin", "auth", "api"],
+    "elasticsearch": ["api", "debug"],
+    "prometheus": ["api", "debug"],
+    "loki": ["api", "debug"],
+    "firebase": ["api", "auth"],
+    "supabase": ["api", "auth"],
+    "okta": ["auth"],
+    "auth0": ["auth"],
+    "keycloak": ["auth"]
+  }
+}
