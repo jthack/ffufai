@@ -13,14 +13,17 @@ import os
 from bs4 import BeautifulSoup
 
 def get_api_key():
+    deepseek_key = os.getenv('DEEPSEEK_API_KEY')
     openai_key = os.getenv('OPENAI_API_KEY')
     anthropic_key = os.getenv('ANTHROPIC_API_KEY')
-    if anthropic_key:
+    if deepseek_key:
+        return ('deepseek', deepseek_key)
+    elif anthropic_key:
         return ('anthropic', anthropic_key)
     elif openai_key:
         return ('openai', openai_key)
     else:
-        raise ValueError("No API key found. Please set OPENAI_API_KEY or ANTHROPIC_API_KEY.")
+        raise ValueError("No API key found. Please set DEEPSEEK_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY.")
 
 
 def get_response(url):
@@ -108,9 +111,17 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
                 {"role": "user", "content": prompt}
             ]
         )
-
-
         return json.loads(message.content[0].text)
+    elif api_type == 'deepseek':
+        client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that suggests file extensions for fuzzing based on URL and headers."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return json.loads(response.choices[0].message.content.strip())
 
 def get_contextual_wordlist(url, headers, api_type, api_key, max_size, cookies=None, content=None):
     prompt = f"""
@@ -136,7 +147,7 @@ def get_contextual_wordlist(url, headers, api_type, api_key, max_size, cookies=N
 
     Response:
     {{
-      "wordlist": ["wp-content", "wp-includes", "wp-admin", "uploads", "themes", "plugins", "2024", "2023", "backup", "cache", "wp-config.php", "xmlrpc.php", "wp-login.php", "readme.html", ".htaccess", "wp-config.php.bak", "debug.log"],
+      "wordlist": ["wp-content", "wp-includes", "wp-admin", "uploads", "themes", "plugins", "2024", "2023", "backup", "cache", "wp-config.php", "xmlrpc.php", "wp-login.php", "readme.html", ".htaccess"[...]
     }}
 
     Example 2: E-commerce Platform
@@ -152,7 +163,7 @@ def get_contextual_wordlist(url, headers, api_type, api_key, max_size, cookies=N
 
     Response:
     {{
-      "wordlist": ["checkout", "payment", "api", "admin", "account", "orders", "products", "cart", "invoice", "App_Data", "bin", "Content", "web.config", "Global.asax", "payment.aspx", "checkout.aspx", "web.config.bak", "App_Data.mdf", "connectionstrings.config"],
+      "wordlist": ["checkout", "payment", "api", "admin", "account", "orders", "products", "cart", "invoice", "App_Data", "bin", "Content", "web.config", "Global.asax", "payment.aspx", "checkout.aspx"[...]
     }}
 
     URL: {url}
@@ -187,6 +198,17 @@ def get_contextual_wordlist(url, headers, api_type, api_key, max_size, cookies=N
         )
 
         return json.loads(message.content[0].text)
+    elif api_type == 'deepseek':
+        client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+            max_tokens=10000,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that suggests wordlists for fuzzing based on URL and headers."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return json.loads(response.content[0].text)
 
 def main():
     parser = argparse.ArgumentParser(description='ffufai - AI-powered ffuf wrapper')
