@@ -100,9 +100,9 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
     elif api_type == 'anthropic':
         client = anthropic.Anthropic(api_key=api_key)
         message = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5-5",
             max_tokens=1000,
-            temperature=0,
+            thinking={"type": "between_tools"},
             system="You are a helpful assistant that suggests file extensions for fuzzing based on URL and headers.",
             messages=[
                 {"role": "user", "content": prompt}
@@ -110,7 +110,7 @@ def get_ai_extensions(url, headers, api_type, api_key, max_extensions):
         )
 
 
-        return json.loads(message.content[0].text)
+        return json.loads(next(b.text for b in message.content if b.type == "text"))
 
 def get_contextual_wordlist(url, headers, api_type, api_key, max_size, cookies=None, content=None):
     prompt = f"""
@@ -177,16 +177,16 @@ def get_contextual_wordlist(url, headers, api_type, api_key, max_size, cookies=N
     elif api_type == 'anthropic':
         client = anthropic.Anthropic(api_key=api_key)
         message = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-5-5",
             max_tokens=10000,
-            temperature=0,
+            thinking={"type": "between_tools"},
             system="You are a helpful assistant that suggests wordlists for fuzzing based on URL and headers.",
             messages=[
                 {"role": "user", "content": prompt}
             ]
         )
 
-        return json.loads(message.content[0].text)
+        return json.loads(next(b.text for b in message.content if b.type == "text"))
 
 def main():
     parser = argparse.ArgumentParser(description='ffufai - AI-powered ffuf wrapper')
